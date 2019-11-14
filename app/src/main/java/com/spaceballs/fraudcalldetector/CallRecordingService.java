@@ -11,22 +11,26 @@ import java.io.IOException;
  * An instance will rewrite to the same file
  */
 public class CallRecordingService {
-    MediaRecorder recorder;
-    File outputFile;
-    int format;
-    boolean started = false;
-    CallRecordingService(String path, int format) {
-        outputFile = new File(path);
-        if(!outputFile.exists())
-            throw new IOError(new Throwable("File doesn't exist"));
+    private MediaRecorder recorder;
+    private File outputDir;
+    private int format;
+    private boolean started = false;
+    CallRecordingService(File dir) {
+        outputDir = dir;
+        if(!outputDir.exists() || !outputDir.isDirectory())
+            throw new IOError(new Throwable("Not a Directory or Directory doesn't exist"));
+        System.out.println("Output Dir:");
+        System.out.println(outputDir.getAbsoluteFile());
         this.recorder = new MediaRecorder();
-        this.format = format;
+        this.format = MediaRecorder.OutputFormat.THREE_GPP;
     }
 
     void configure() {
+        recorder.setAudioSource(MediaRecorder.AudioSource.VOICE_COMMUNICATION);
         recorder.setOutputFormat(format);
-        recorder.setOutputFile(outputFile);
-        recorder.setAudioEncoder(MediaRecorder.AudioEncoder.DEFAULT);// TODO see if default is good enough
+        recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+        recorder.setOutputFile(outputDir.getAbsolutePath()+"/call.3gpp");
+        // TODO see if default is good enough
     }
 
     public void start() {
@@ -34,6 +38,7 @@ public class CallRecordingService {
             stop();
         }
         configure();
+        started = true;
         try {
             recorder.prepare();
         } catch (IOException e) {
@@ -44,9 +49,12 @@ public class CallRecordingService {
     }
 
     public void stop() {
-        recorder.stop();
-        recorder.reset();
-        recorder.release();
+        if(started) {
+            recorder.stop();
+            recorder.reset();
+            recorder.release();
+            started = false;
+        }
     }
 
 

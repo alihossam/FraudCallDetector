@@ -3,6 +3,17 @@
     xmlns:dist="http://schemas.android.com/apk/distribution"
     package="com.spaceballs.fraudcalldetector">
 
+    <!--TODO remove write external permission-->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <!--<uses-permission android:name="android.permission.CALL_PHONE" />-->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <!--<uses-permission android:name="android.permission.MODIFY_PHONE_STATE"-->
+        <!--tools:ignore="ProtectedPermissions" />-->
+    <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS"/>
+    <uses-permission android:name="android.permission.CAL"/>
+    <uses-permission android:name="android.permission.READ_CALL_LOG" />
+    <uses-permission android:name="android.permission.WRITE_CALL_LOG" />
     <dist:module dist:instant="true" />
 
     <application
@@ -19,6 +30,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <service android:name=".PhoneCallListenerService"/>
     </application>
 
 </manifest>
