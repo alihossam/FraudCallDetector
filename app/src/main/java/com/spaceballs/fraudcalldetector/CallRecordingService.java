@@ -22,22 +22,24 @@ public class CallRecordingService {
         System.out.println("Output Dir:");
         System.out.println(outputDir.getAbsoluteFile());
         this.recorder = new MediaRecorder();
-        this.format = MediaRecorder.OutputFormat.THREE_GPP;
+        this.format = MediaRecorder.OutputFormat.MPEG_4;
     }
 
     void configure() {
         recorder.setAudioSource(MediaRecorder.AudioSource.VOICE_COMMUNICATION);
         recorder.setOutputFormat(format);
         recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
-        recorder.setOutputFile(outputDir.getAbsolutePath()+"/call.3gpp");
+        recorder.setOutputFile(outputDir.getAbsolutePath()+"/call.mpeg");
         // TODO see if default is good enough
     }
 
     public void start() {
+        System.out.println("Starting to record");
         if(started) {
             stop();
         }
         configure();
+        System.out.println("Config Done!");
         started = true;
         try {
             recorder.prepare();
@@ -49,10 +51,13 @@ public class CallRecordingService {
     }
 
     public void stop() {
+        System.out.println("Stopping1");
         if(started) {
+            System.out.println("Stopping2");
             recorder.stop();
             recorder.reset();
             recorder.release();
+            System.out.println("Released!");
             started = false;
         }
     }
