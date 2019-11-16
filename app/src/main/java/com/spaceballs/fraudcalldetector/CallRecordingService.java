@@ -22,7 +22,7 @@ public class CallRecordingService {
         System.out.println("Output Dir:");
         System.out.println(outputDir.getAbsoluteFile());
         this.recorder = new MediaRecorder();
-        this.format = MediaRecorder.OutputFormat.MPEG_4;
+        this.format = MediaRecorder.OutputFormat.WEBM;
     }
 
     void configure() {
