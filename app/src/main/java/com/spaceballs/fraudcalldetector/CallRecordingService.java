@@ -29,7 +29,7 @@ public class CallRecordingService {
         recorder.setAudioSource(MediaRecorder.AudioSource.VOICE_COMMUNICATION);
         recorder.setOutputFormat(format);
         recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
-        recorder.setOutputFile(outputDir.getAbsolutePath()+"/call.mpeg");
+        recorder.setOutputFile(outputDir.getAbsolutePath()+"/call.webm");
         // TODO see if default is good enough
     }
 

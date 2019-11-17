@@ -13,6 +13,8 @@ public class PhoneCallListenerService extends Service {
     TelephonyManager manager;
     CallRecordingService recorder;
     File directory;
+    SpeechToTextService STTService;
+    String callTranscripts;
 
     @Override
     public IBinder onBind(Intent arg0) {
@@ -25,6 +27,7 @@ public class PhoneCallListenerService extends Service {
         directory = getApplicationContext().getExternalFilesDir(null);
         recorder = new CallRecordingService(directory);
         manager = (TelephonyManager) getApplicationContext().getSystemService(getApplicationContext().TELEPHONY_SERVICE);
+        STTService = new SpeechToTextService();
         attachListener();
         // TODO prob want to use START_STICKY instead
         return START_STICKY;
@@ -41,6 +44,7 @@ public class PhoneCallListenerService extends Service {
                 if(state == TelephonyManager.CALL_STATE_IDLE && prevState == TelephonyManager.CALL_STATE_OFFHOOK) {
                     prevState = TelephonyManager.CALL_STATE_IDLE;
                     recorder.stop();
+                    STTService.getTranscripts(directory.getAbsolutePath()+"/call.webm");
                     cleanUp();
                 }
                 else if(state == TelephonyManager.CALL_STATE_OFFHOOK) {
