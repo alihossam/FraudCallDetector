@@ -1,5 +1,7 @@
 package com.spaceballs.fraudcalldetector;
 
+import com.ibm.cloud.sdk.core.security.Authenticator;
+import com.ibm.cloud.sdk.core.security.IamAuthenticator;
 import com.ibm.watson.speech_to_text.v1.SpeechToText;
 import com.ibm.watson.speech_to_text.v1.model.RecognizeOptions;
 import com.ibm.watson.speech_to_text.v1.model.SpeechRecognitionResults;
@@ -14,7 +16,8 @@ public class SpeechToTextService {
     private final SpeechToText speechService;
 
     public SpeechToTextService(){
-        speechService = new SpeechToText();
+        Authenticator authenticator = new IamAuthenticator("");
+        speechService = new SpeechToText(authenticator);
         options = new RecognizeOptions.Builder()
                 .interimResults(true)
                 .inactivityTimeout(2000)
