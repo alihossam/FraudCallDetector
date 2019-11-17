@@ -16,19 +16,17 @@ public class SpeechToTextService {
     private final SpeechToText speechService;
 
     public SpeechToTextService(){
-        Authenticator authenticator = new IamAuthenticator("");
+        Authenticator authenticator = new IamAuthenticator("Alb8CQY8aG63hxhVf6o5bEgU0Zde2hXW-EQZf32v8y4Z");
         speechService = new SpeechToText(authenticator);
-        options = new RecognizeOptions.Builder()
-                .interimResults(true)
-                .inactivityTimeout(2000)
-                .build();
     }
 
     public void getTranscripts(String filePath){
         File audioFile = new File(filePath);
         try {
 
-            this.options = options.newBuilder()
+            this.options = new RecognizeOptions.Builder()
+                    .interimResults(true)
+                    .inactivityTimeout(2000)
                     .audio(audioFile)
                     .build();
 

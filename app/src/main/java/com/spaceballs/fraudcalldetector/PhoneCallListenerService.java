@@ -44,7 +44,7 @@ public class PhoneCallListenerService extends Service {
                 if(state == TelephonyManager.CALL_STATE_IDLE && prevState == TelephonyManager.CALL_STATE_OFFHOOK) {
                     prevState = TelephonyManager.CALL_STATE_IDLE;
                     recorder.stop();
-                    STTService.getTranscripts(directory.getAbsolutePath()+"/call.webm");
+                    STTService.getTranscripts(directory.getAbsolutePath()+"/call.mpeg");
                     cleanUp();
                 }
                 else if(state == TelephonyManager.CALL_STATE_OFFHOOK) {

@@ -22,14 +22,14 @@ public class CallRecordingService {
         System.out.println("Output Dir:");
         System.out.println(outputDir.getAbsoluteFile());
         this.recorder = new MediaRecorder();
-        this.format = MediaRecorder.OutputFormat.WEBM;
+        this.format = MediaRecorder.OutputFormat.MPEG_4;
     }
 
     void configure() {
         recorder.setAudioSource(MediaRecorder.AudioSource.VOICE_COMMUNICATION);
         recorder.setOutputFormat(format);
         recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
-        recorder.setOutputFile(outputDir.getAbsolutePath()+"/call.webm");
+        recorder.setOutputFile(outputDir.getAbsolutePath()+"/call.mpeg");
         // TODO see if default is good enough
     }
 
