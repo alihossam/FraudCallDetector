@@ -11,10 +11,13 @@ import java.io.IOException;
  * An instance will rewrite to the same file
  */
 public class CallRecordingService {
+    static String FORMAT = "mpeg";
+    static String FILENAME = "call.mpeg";
     private MediaRecorder recorder;
     private File outputDir;
     private int format;
     private boolean started = false;
+
     CallRecordingService(File dir) {
         outputDir = dir;
         if(!outputDir.exists() || !outputDir.isDirectory())
@@ -59,6 +62,22 @@ public class CallRecordingService {
             recorder.release();
             System.out.println("Released!");
             started = false;
+        }
+    }
+
+    public String getSavedFileAbsolutePath() {
+        return outputDir.getAbsolutePath() + "/" + FILENAME;
+    }
+
+    private void cleanUp() {
+        // TODO clean the recorded file so that we don't keep any user data
+        File[] files = outputDir.listFiles();
+        for(File f : files) {
+            String filePath = f.getAbsolutePath();
+            String extension = filePath.substring(filePath.lastIndexOf('.'));
+            if(extension == CallRecordingService.FORMAT) {
+                f.delete();
+            }
         }
     }
 

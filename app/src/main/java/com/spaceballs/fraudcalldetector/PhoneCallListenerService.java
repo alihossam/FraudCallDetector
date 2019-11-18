@@ -29,7 +29,6 @@ public class PhoneCallListenerService extends Service {
         manager = (TelephonyManager) getApplicationContext().getSystemService(getApplicationContext().TELEPHONY_SERVICE);
         STTService = new SpeechToTextService();
         attachListener();
-        // TODO prob want to use START_STICKY instead
         return START_STICKY;
     }
 
@@ -44,8 +43,7 @@ public class PhoneCallListenerService extends Service {
                 if(state == TelephonyManager.CALL_STATE_IDLE && prevState == TelephonyManager.CALL_STATE_OFFHOOK) {
                     prevState = TelephonyManager.CALL_STATE_IDLE;
                     recorder.stop();
-                    STTService.getTranscripts(directory.getAbsolutePath()+"/call.mpeg");
-                    cleanUp();
+                    STTService.getTranscripts(recorder.getSavedFileAbsolutePath());
                 }
                 else if(state == TelephonyManager.CALL_STATE_OFFHOOK) {
                     prevState = TelephonyManager.CALL_STATE_OFFHOOK;
@@ -54,9 +52,5 @@ public class PhoneCallListenerService extends Service {
 
             }
         }, PhoneStateListener.LISTEN_CALL_STATE);
-    }
-
-    void cleanUp() {
-        // TODO clean the recorded file so that we don't keep any user data
     }
 }
