@@ -25,6 +25,7 @@ public class SpeechToTextService {
         try {
 
             this.options = new RecognizeOptions.Builder()
+                    .model(RecognizeOptions.Model.EN_US_NARROWBANDMODEL)
                     .interimResults(true)
                     .inactivityTimeout(2000)
                     .audio(audioFile)
@@ -33,8 +34,10 @@ public class SpeechToTextService {
             speechService.recognizeUsingWebSocket(this.options, new BaseRecognizeCallback() {
                 @Override
                 public void onTranscription(SpeechRecognitionResults speechResults) {
-                    String text = speechResults.getResults().get(0).getAlternatives().get(0).getTranscript();
-                    System.out.println(text);
+                    if(speechResults.getResults().size() != 0) {
+                        String text = speechResults.getResults().get(0).getAlternatives().get(0).getTranscript();
+                        System.out.println(text);
+                    }
                     ///////////////////////////////////////////////
                     //Call ML API here, If Scam send a notification
                     //This can be done with a callback from an MLService class
@@ -42,17 +45,17 @@ public class SpeechToTextService {
 
                 @Override
                 public void onConnected() {
-
+                    System.out.println("Connected");
                 }
 
                 @Override
                 public void onError(Exception e) {
-
+                    System.out.println("ERROR:"+e.getMessage());
                 }
 
                 @Override
                 public void onDisconnected() {
-
+                    System.out.println("Disconnected");
                 }
             });
 

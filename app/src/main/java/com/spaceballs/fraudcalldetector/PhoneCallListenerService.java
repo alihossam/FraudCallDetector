@@ -23,7 +23,6 @@ public class PhoneCallListenerService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        //directory = getApplicationContext().getDir("RecordedCallsCache", Context.MODE_PRIVATE);
         directory = getApplicationContext().getExternalFilesDir(null);
         recorder = new CallRecordingService(directory);
         manager = (TelephonyManager) getApplicationContext().getSystemService(getApplicationContext().TELEPHONY_SERVICE);
