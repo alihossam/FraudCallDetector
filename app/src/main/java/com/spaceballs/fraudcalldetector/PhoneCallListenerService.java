@@ -44,6 +44,7 @@ public class PhoneCallListenerService extends Service {
                     recorder.stop();
                     //STTService.speechToTextUsingGoogle(new File(recorder.getSavedFileAbsolutePath()));
                     //STTService.convertToFlac(recorder.getSavedFileAbsolutePath(), getApplicationContext());
+                    STTService.convertToFlac(recorder.getSavedFileAbsolutePath(), getApplicationContext());
                 }
                 else if(state == TelephonyManager.CALL_STATE_OFFHOOK) {
                     prevState = TelephonyManager.CALL_STATE_OFFHOOK;
@@ -51,7 +52,7 @@ public class PhoneCallListenerService extends Service {
                     recorder.start();
                 } else if(state == TelephonyManager.CALL_STATE_IDLE) {
                     //STTService.speechToTextUsingGoogle(new File(recorder.getSavedFileAbsolutePath()));
-                    STTService.convertToFlac(recorder.getSavedFileAbsolutePath(), getApplicationContext());
+                    //STTService.convertToFlac(recorder.getSavedFileAbsolutePath(), getApplicationContext());
                 }
 
             }
