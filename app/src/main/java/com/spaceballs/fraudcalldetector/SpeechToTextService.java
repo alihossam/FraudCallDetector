@@ -191,7 +191,7 @@ public class SpeechToTextService {
                 .setFile(mpegFile)
 
                 // Your desired audio format
-                .setFormat(AudioFormat.MP3)
+                .setFormat(AudioFormat.WAV)
 
                 // An callback to know when conversion is finished
                 .setCallback(callback)
