@@ -23,13 +23,11 @@ public class PhoneCallListenerService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        //directory = getApplicationContext().getDir("RecordedCallsCache", Context.MODE_PRIVATE);
         directory = getApplicationContext().getExternalFilesDir(null);
         recorder = new CallRecordingService(directory);
         manager = (TelephonyManager) getApplicationContext().getSystemService(getApplicationContext().TELEPHONY_SERVICE);
         STTService = new SpeechToTextService();
         attachListener();
-        // TODO prob want to use START_STICKY instead
         return START_STICKY;
     }
 
@@ -44,19 +42,20 @@ public class PhoneCallListenerService extends Service {
                 if(state == TelephonyManager.CALL_STATE_IDLE && prevState == TelephonyManager.CALL_STATE_OFFHOOK) {
                     prevState = TelephonyManager.CALL_STATE_IDLE;
                     recorder.stop();
-                    STTService.getTranscripts(directory.getAbsolutePath()+"/call.webm");
-                    cleanUp();
+                    //STTService.speechToTextUsingGoogle(new File(recorder.getSavedFileAbsolutePath()));
+                    //STTService.convertToFlac(recorder.getSavedFileAbsolutePath(), getApplicationContext());
+                    STTService.convertToFlac(recorder.getSavedFileAbsolutePath(), getApplicationContext());
                 }
                 else if(state == TelephonyManager.CALL_STATE_OFFHOOK) {
                     prevState = TelephonyManager.CALL_STATE_OFFHOOK;
+                    //STTService.speechToTextUsingGoogle(recorder.getSavedFileAbsolutePath());
                     recorder.start();
+                } else if(state == TelephonyManager.CALL_STATE_IDLE) {
+                    //STTService.speechToTextUsingGoogle(new File(recorder.getSavedFileAbsolutePath()));
+                    //STTService.convertToFlac(recorder.getSavedFileAbsolutePath(), getApplicationContext());
                 }
 
             }
         }, PhoneStateListener.LISTEN_CALL_STATE);
-    }
-
-    void cleanUp() {
-        // TODO clean the recorded file so that we don't keep any user data
     }
 }
