@@ -37,7 +37,7 @@ public class SpeechToTextService {
     private final SpeechToText speechService;
 
     public SpeechToTextService() {
-        Authenticator authenticator = new IamAuthenticator("Alb8CQY8aG63hxhVf6o5bEgU0Zde2hXW-EQZf32v8y4Z");
+        Authenticator authenticator = new IamAuthenticator("");
         speechService = new SpeechToText(authenticator);
     }
 
@@ -129,7 +129,7 @@ public class SpeechToTextService {
         RequestBody body = RequestBody.create(contentJsonObject.toString(), JSON);
 
         final Request request = new Request.Builder()
-                .url("https://speech.googleapis.com/v1/speech:recognize?key=AIzaSyCsD9mPrtmRQFlozBG4aBQcNaob-tsJlXU")
+                .url("https://speech.googleapis.com/v1/speech:recognize?key=")
                 .post(body)
                 .addHeader("content-type", "application/json")
                 .build();
