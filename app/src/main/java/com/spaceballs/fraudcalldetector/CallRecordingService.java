@@ -26,13 +26,17 @@ public class CallRecordingService {
         System.out.println(outputDir.getAbsoluteFile());
         this.recorder = new MediaRecorder();
         this.format = MediaRecorder.OutputFormat.MPEG_4;
+        configure();
+        System.out.println("Config Done!");
     }
 
     void configure() {
         recorder.setAudioSource(MediaRecorder.AudioSource.VOICE_COMMUNICATION);
         recorder.setOutputFormat(format);
         recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
-        recorder.setOutputFile(outputDir.getAbsolutePath()+"/call.mpeg");
+        recorder.setAudioChannels(1);
+        recorder.setAudioSamplingRate(16000);
+        recorder.setOutputFile(outputDir.getAbsolutePath()+"/call.m4a");
         // TODO see if default is good enough
     }
 
@@ -41,8 +45,6 @@ public class CallRecordingService {
         if(started) {
             stop();
         }
-        configure();
-        System.out.println("Config Done!");
         started = true;
         try {
             recorder.prepare();
@@ -54,9 +56,7 @@ public class CallRecordingService {
     }
 
     public void stop() {
-        System.out.println("Stopping1");
         if(started) {
-            System.out.println("Stopping2");
             recorder.stop();
             recorder.reset();
             recorder.release();
