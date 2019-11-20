@@ -24,15 +24,13 @@ public class CallRecordingService {
         outputDir = dir;
         if(!outputDir.exists() || !outputDir.isDirectory())
             throw new IOError(new Throwable("Not a Directory or Directory doesn't exist"));
-        System.out.println("Output Dir:");
-        System.out.println(outputDir.getAbsoluteFile());
-        this.recorder = new MediaRecorder();
         this.format = MediaRecorder.OutputFormat.AMR_WB;
         configure();
         System.out.println("Config Done!");
     }
 
     void configure() {
+        this.recorder = new MediaRecorder();
         recorder.setAudioSource(MediaRecorder.AudioSource.VOICE_COMMUNICATION);
         recorder.setOutputFormat(format);
         recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_WB);
@@ -47,6 +45,7 @@ public class CallRecordingService {
             stop();
         }
         started = true;
+        configure();
         try {
             recorder.prepare();
         } catch (IOException e) {
