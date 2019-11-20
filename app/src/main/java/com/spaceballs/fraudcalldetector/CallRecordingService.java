@@ -49,6 +49,7 @@ public class CallRecordingService {
             recorder.prepare();
         } catch (IOException e) {
             // TODO show the user a message saying couldn't start recording
+            e.printStackTrace();
             return;
         }
         recorder.start();
