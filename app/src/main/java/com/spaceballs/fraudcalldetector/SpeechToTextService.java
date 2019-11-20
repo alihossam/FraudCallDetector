@@ -1,10 +1,7 @@
 package com.spaceballs.fraudcalldetector;
 
-import android.content.Context;
 import android.util.Base64;
 import android.util.Log;
-
-import com.ibm.watson.speech_to_text.v1.model.RecognizeOptions;
 
 import org.apache.commons.io.FileUtils;
 import org.json.JSONArray;
@@ -15,9 +12,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
-import cafe.adriel.androidaudioconverter.AndroidAudioConverter;
-import cafe.adriel.androidaudioconverter.callback.IConvertCallback;
-import cafe.adriel.androidaudioconverter.model.AudioFormat;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.MediaType;
@@ -27,59 +21,6 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class SpeechToTextService {
-
-    private RecognizeOptions options;
-   // private final SpeechToText speechService;
-
-    public SpeechToTextService() {
-        //Authenticator authenticator = new IamAuthenticator("");
-        //speechService = new SpeechToText(authenticator);
-    }
-
-//    public void getTranscripts(String filePath) {
-//        File audioFile = new File(filePath);
-//        try {
-//
-//            this.options = new RecognizeOptions.Builder()
-//                    .model(RecognizeOptions.Model.EN_US_NARROWBANDMODEL)
-//                    .interimResults(true)
-//                    .inactivityTimeout(2000)
-//                    .audio(audioFile)
-//                    .build();
-//
-//            speechService.recognizeUsingWebSocket(this.options, new BaseRecognizeCallback() {
-//                @Override
-//                public void onTranscription(SpeechRecognitionResults speechResults) {
-//                    if (speechResults.getResults().size() != 0) {
-//                        String text = speechResults.getResults().get(0).getAlternatives().get(0).getTranscript();
-//                        System.out.println(text);
-//                    }
-//                    ///////////////////////////////////////////////
-//                    //Call ML API here, If Scam send a notification
-//                    //This can be done with a callback from an MLService class
-//                }
-//
-//                @Override
-//                public void onConnected() {
-//                    System.out.println("Connected");
-//                }
-//
-//                @Override
-//                public void onError(Exception e) {
-//                    System.out.println("ERROR:" + e.getMessage());
-//                }
-//
-//                @Override
-//                public void onDisconnected() {
-//                    System.out.println("Disconnected");
-//                }
-//            });
-//
-//        } catch (IOException e) {
-//            System.out.println("Failed to get call transcripts. Err: " + e.getMessage());
-//        }
-//    }
-
 
     public void speechToTextUsingGoogle(File file) {
         JSONObject audioRequest = new JSONObject();
@@ -165,33 +106,4 @@ public class SpeechToTextService {
 
     }
 
-    public void convertToFlac(String filePath, Context context) {
-        File mpegFile = new File(filePath);
-        IConvertCallback callback = new IConvertCallback() {
-            @Override
-            public void onSuccess(File convertedFile) {
-                speechToTextUsingGoogle(convertedFile);
-                // TODO send in file instead
-
-                //getTranscripts(convertedFile.getAbsolutePath());
-            }
-            @Override
-            public void onFailure(Exception error) {
-                // Oops! Something went wrong
-                System.out.println("Error: "+error.getMessage());
-            }
-        };
-        AndroidAudioConverter.with(context)
-                // Your current audio file
-                .setFile(mpegFile)
-
-                // Your desired audio format
-                .setFormat(AudioFormat.WAV)
-
-                // An callback to know when conversion is finished
-                .setCallback(callback)
-
-                // Start conversion
-                .convert();
-    }
 }
