@@ -25,7 +25,6 @@ public class CallRecordingService {
         if(!outputDir.exists() || !outputDir.isDirectory())
             throw new IOError(new Throwable("Not a Directory or Directory doesn't exist"));
         this.format = MediaRecorder.OutputFormat.AMR_WB;
-        configure();
         System.out.println("Config Done!");
     }
 
