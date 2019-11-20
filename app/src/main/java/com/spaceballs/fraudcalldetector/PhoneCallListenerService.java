@@ -40,10 +40,18 @@ public class PhoneCallListenerService extends Service {
                 System.out.println("State Received:");
                 System.out.println(state);
                 if(state == TelephonyManager.CALL_STATE_IDLE && prevState == TelephonyManager.CALL_STATE_OFFHOOK) {
-                    stop();
+                    try {
+                        stop();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
                 else if(state == TelephonyManager.CALL_STATE_OFFHOOK) {
-                    start();
+                    try {
+                        start();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
 
             }
