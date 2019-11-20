@@ -14,7 +14,7 @@ public class PhoneCallListenerService extends Service {
     CallRecordingService recorder;
     File directory;
     SpeechToTextService STTService;
-    String callTranscripts;
+    PhoneStateListener listener;
 
     @Override
     public IBinder onBind(Intent arg0) {
@@ -27,12 +27,7 @@ public class PhoneCallListenerService extends Service {
         recorder = new CallRecordingService(directory);
         manager = (TelephonyManager) getApplicationContext().getSystemService(getApplicationContext().TELEPHONY_SERVICE);
         STTService = new SpeechToTextService();
-        attachListener();
-        return START_STICKY;
-    }
-
-    void attachListener() {
-        manager.listen(new PhoneStateListener() {
+        listener = new PhoneStateListener() {
             int prevState = TelephonyManager.CALL_STATE_IDLE;
             @Override
             public void onCallStateChanged(int state, String incomingNumber) {
@@ -67,6 +62,12 @@ public class PhoneCallListenerService extends Service {
                 STTService.speechToTextUsingGoogle(new File(recorder.getSavedFileAbsolutePath()));
                 // TODO remove FLAC stuff and unneeded dependencies
             }
-        }, PhoneStateListener.LISTEN_CALL_STATE);
+        };
+        attachListener();
+        return START_STICKY;
+    }
+
+    void attachListener() {
+        manager.listen(listener, PhoneStateListener.LISTEN_CALL_STATE);
     }
 }
