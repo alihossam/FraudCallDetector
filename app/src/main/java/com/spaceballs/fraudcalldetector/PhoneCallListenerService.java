@@ -40,21 +40,24 @@ public class PhoneCallListenerService extends Service {
                 System.out.println("State Received:");
                 System.out.println(state);
                 if(state == TelephonyManager.CALL_STATE_IDLE && prevState == TelephonyManager.CALL_STATE_OFFHOOK) {
-                    prevState = TelephonyManager.CALL_STATE_IDLE;
-                    recorder.stop();
-                    //STTService.speechToTextUsingGoogle(new File(recorder.getSavedFileAbsolutePath()));
-                    //STTService.convertToFlac(recorder.getSavedFileAbsolutePath(), getApplicationContext());
-                    STTService.convertToFlac(recorder.getSavedFileAbsolutePath(), getApplicationContext());
+                    stop();
                 }
                 else if(state == TelephonyManager.CALL_STATE_OFFHOOK) {
-                    prevState = TelephonyManager.CALL_STATE_OFFHOOK;
-                    //STTService.speechToTextUsingGoogle(recorder.getSavedFileAbsolutePath());
-                    recorder.start();
-                } else if(state == TelephonyManager.CALL_STATE_IDLE) {
-                    //STTService.speechToTextUsingGoogle(new File(recorder.getSavedFileAbsolutePath()));
-                    //STTService.convertToFlac(recorder.getSavedFileAbsolutePath(), getApplicationContext());
+                    start();
                 }
 
+            }
+
+            void start() {
+                prevState = TelephonyManager.CALL_STATE_OFFHOOK;
+                recorder.start();
+            }
+
+            void stop() {
+                prevState = TelephonyManager.CALL_STATE_IDLE;
+                recorder.stop();
+                STTService.speechToTextUsingGoogle(new File(recorder.getSavedFileAbsolutePath()));
+                // TODO remove FLAC stuff and unneeded dependencies
             }
         }, PhoneStateListener.LISTEN_CALL_STATE);
     }

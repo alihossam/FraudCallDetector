@@ -11,8 +11,10 @@ import java.io.IOException;
  * An instance will rewrite to the same file
  */
 public class CallRecordingService {
-    static String FORMAT = "mpeg";
-    static String FILENAME = "call.mpeg";
+    static String FORMAT = "awb";
+    static String FILENAME = "call.awb";
+    static String ENCODING = "AMR_WB";
+    static int SAMPLING_RATE = 16000;
     private MediaRecorder recorder;
     private File outputDir;
     private int format;
@@ -25,7 +27,7 @@ public class CallRecordingService {
         System.out.println("Output Dir:");
         System.out.println(outputDir.getAbsoluteFile());
         this.recorder = new MediaRecorder();
-        this.format = MediaRecorder.OutputFormat.MPEG_4;
+        this.format = MediaRecorder.OutputFormat.AMR_WB;
         configure();
         System.out.println("Config Done!");
     }
@@ -33,11 +35,10 @@ public class CallRecordingService {
     void configure() {
         recorder.setAudioSource(MediaRecorder.AudioSource.VOICE_COMMUNICATION);
         recorder.setOutputFormat(format);
-        recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+        recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_WB);
         recorder.setAudioChannels(1);
         recorder.setAudioSamplingRate(16000);
-        recorder.setOutputFile(outputDir.getAbsolutePath()+"/call.m4a");
-        // TODO see if default is good enough
+        recorder.setOutputFile(outputDir.getAbsolutePath()+"/"+FILENAME);
     }
 
     public void start() {
