@@ -16,4 +16,15 @@
     <string name="UserPreferences">appPrefs</string>
     <string name="rememberKey">rK</string>
     <string name="service_started_success">The Buster Service started successfully</string>
+    <string name="how_it_works">How it Works</string>
+    <string name="how_it_works_desc">
+        The application will run in the background and record your phone calls
+        and then run some analysis on the recording to figure out if the call was fraudulent
+        or not.
+    </string>
+    <string name="what_todo">What To Do</string>
+    <string name="what_todo_desc">
+        Watch out for notifications after your call ends (might take a couple of seconds).\n
+        The notification should tell you whether the call was fraudulent or not.
+    </string>
 </resources>
