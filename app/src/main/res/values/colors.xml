@@ -3,4 +3,14 @@
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
+    <color name="red">#FF0000</color>
+    <color name="menuCardsBg">#BFFFFFFF</color>
+    <color name="heart_rate_graph_bg">#40000000</color>
+    <color name="heart_rate_graph_line">#40FEFFFF</color>
+    <color name="readingsCardsBg">#CCF7F2F2</color>
+    <color name="modal">#4DFFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="yellow">#FFFFEB3B</color>
+    <color name="green">#ffa6c575</color>
+    <color name="white">#FFFFFF</color>
 </resources>

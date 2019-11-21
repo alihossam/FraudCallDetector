@@ -1,3 +1,19 @@
 <resources>
-    <string name="app_name">FraudCallDetector</string>
+    <string name="app_name">FraudBuster</string>
+    <string name="disclaimer">Disclaimer</string>
+    <string name="disclaimer_content">
+        By Clicking Continue you agree to the following:\n
+        - This application will record your phone calls\n
+        - This application might send phone call recordings to 3rd Parties such as (but not limited to) Google for processing\n
+        - These 3rd parties might store your calls\n
+        - There is no guarantee that every fraudulent call will be detected\n
+        ** If you click Cancel the application will terminate
+    </string>
+    <string name="use_at_own_risk">USE AT YOUR OWN RISK</string>
+    <string name="agree">Continue</string>
+    <string name="disagree">Cancel</string>
+    <string name="dont_ask_again">Remeber, Don\'t ask me again</string>
+    <string name="UserPreferences">appPrefs</string>
+    <string name="rememberKey">rK</string>
+    <string name="service_started_success">The Buster Service started successfully</string>
 </resources>
