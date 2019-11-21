@@ -29,6 +29,7 @@ public class MainActivity extends AppCompatActivity implements IDisclaimerDialog
             DialogFragment disclaimerDialog = DisclaimerDialog.createDialog(this);
             disclaimerDialog.show(getSupportFragmentManager(), "DisclaimerDialog");
         }
+        NotificationsHelper.createAndPushMainNotification(getApplicationContext());
     }
 
     private void setupAndStartListener() {
