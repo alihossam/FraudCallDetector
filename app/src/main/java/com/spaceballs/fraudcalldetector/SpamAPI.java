@@ -3,8 +3,9 @@ package com.spaceballs.fraudcalldetector;
 import java.io.IOException;
 
 import okhttp3.*;
-import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 // Source: https://www.mkyong.com/java/okhttp-how-to-send-http-requests/
 public class SpamAPI {
@@ -66,24 +67,41 @@ public class SpamAPI {
         return response;
     }
 
-    private static JSONObject sendOopSpamRequestJson(String text) throws Exception {
+    public static JSONObject sendOopSpamRequestJson(String text) throws Exception {
         JSONObject jsonResponse = null;
+        Response response = null;
         try {
-            Response response = sendOopSpamRequest(text);
-            jsonResponse = (JSONObject) JSONValue.parse(response.body().string());
-        } catch (IOException e) {
+            response = sendOopSpamRequest(text);
+            String responseBody = response.body().string();
+            jsonResponse = new JSONObject(responseBody);
+        } catch (NullPointerException e) {
             e.printStackTrace();
+            if (response != null)
+                System.out.print(response.code() + " " + response.message());
+            throw new IOException("Response body cannot be converted to string.");
         }
         return jsonResponse;
     }
 
     public static int getTextSpamScore(JSONObject responseBody)
     {
-        return Integer.parseInt(responseBody.get("Score").toString());
+        try {
+            return Integer.parseInt(responseBody.get("Score").toString());
+        } catch (NullPointerException e) {
+            throw new IllegalArgumentException("responseBody is null");
+        } catch (JSONException e) {
+            throw new IllegalArgumentException("ResponseBody does not contain Score field");
+        }
     }
 
     public static boolean isTextSpam(JSONObject responseBody)
     {
-        return ((JSONObject) responseBody.get("Details")).get("isContentSpam").equals("spam");
+        try {
+            return ((JSONObject) responseBody.get("Details")).get("isContentSpam").equals("spam");
+        } catch (NullPointerException e) {
+            throw new IllegalArgumentException("responseBody is null");
+        } catch (JSONException e) {
+            throw new IllegalArgumentException("ResponseBody does not contain isContentSpam field");
+        }
     }
 }
