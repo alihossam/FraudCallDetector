@@ -21,8 +21,11 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class SpeechToTextService {
+    interface CallbackWithTranscript {
+        void run(String text);
+    }
 
-    public void speechToTextUsingGoogle(File file) {
+    public void speechToTextUsingGoogle(File file, final CallbackWithTranscript callback) {
         JSONObject audioRequest = new JSONObject();
         JSONObject configRequest = new JSONObject();
 
@@ -86,15 +89,19 @@ public class SpeechToTextService {
                     Log.e("Message", "--> " + tempRes.toString());
 
                     if (tempRes.has("results")) {
-
-                        JSONArray alternatives;
-                        alternatives = tempRes.getJSONArray("results").getJSONObject(0).getJSONArray("alternatives");
-
-                        final JSONObject transcript;
-                        transcript = alternatives.getJSONObject(0);
-
-                        Log.e("Check", "-->" + transcript.getString("transcript"));
-
+                        StringBuilder totalStringBuilder = new StringBuilder();
+                        try {
+                            JSONArray results = tempRes.getJSONArray("results");
+                            for (int i = 0; i < results.length(); i++) {
+                                // There is a different results object between every pause during a conversation,
+                                // so we concatenate all of them before sending everything to the spam filter.
+                                JSONObject alternative = results.getJSONObject(i).getJSONArray("alternatives").getJSONObject(0);
+                                totalStringBuilder.append(alternative.getString("transcript") + "\n");
+                            }
+                        } catch (JSONException e) {
+                            Log.e("Results Error", "Cannot deserialize JSON: " + tempRes.toString());
+                        }
+                        callback.run(totalStringBuilder.toString());
                     }
 
                 } catch (Exception e) {

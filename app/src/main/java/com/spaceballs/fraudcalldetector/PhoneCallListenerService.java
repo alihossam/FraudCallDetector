@@ -5,10 +5,9 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 
 import java.io.File;
-import java.util.Timer;
-import java.util.TimerTask;
 
 // TODO make this a singleton somehow (static maybe)
 public class PhoneCallListenerService extends Service {
@@ -17,8 +16,7 @@ public class PhoneCallListenerService extends Service {
     File directory;
     SpeechToTextService STTService;
     PhoneStateListener listener;
-    Timer timer;
-    TimerTask timerTask;
+    SpamAPI spamAPI;
 
     @Override
     public IBinder onBind(Intent arg0) {
@@ -28,6 +26,7 @@ public class PhoneCallListenerService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         directory = getApplicationContext().getExternalFilesDir(null);
+        spamAPI = new SpamAPI("https://oopspam.p.rapidapi.com/v1/spamdetection", "");
         recorder = new CallRecordingService(directory);
         manager = (TelephonyManager) getApplicationContext().getSystemService(getApplicationContext().TELEPHONY_SERVICE);
         STTService = new SpeechToTextService();
@@ -41,20 +40,6 @@ public class PhoneCallListenerService extends Service {
                 if(state == TelephonyManager.CALL_STATE_IDLE && prevState == TelephonyManager.CALL_STATE_OFFHOOK) {
                     try {
                         stop();
-                        // Remove this from here after the video
-                        timer = new Timer();
-                        timerTask = new TimerTask() {
-                            @Override
-                            public void run() {
-                                System.out.println("PUSHING NOTIFICAION");
-                                NotificationsHelper.pushNotification(
-                                        getApplicationContext(),
-                                        "WARNING!! YOUR CALL MIGHT BE A SCAM",
-                                        "If you gave away any private information, inform the relevant parties immediately.");
-                            }
-                        };
-                        System.out.println("SCHEDULING NOTIFICAION");
-                        timer.schedule(timerTask, 5000);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -77,8 +62,29 @@ public class PhoneCallListenerService extends Service {
             void stop() {
                 prevState = TelephonyManager.CALL_STATE_IDLE;
                 recorder.stop();
-                STTService.speechToTextUsingGoogle(new File(recorder.getSavedFileAbsolutePath()));
-                // TODO remove FLAC stuff and unneeded dependencies
+                Log.i("PhoneCallListenerService", "Stopping");
+                STTService.speechToTextUsingGoogle(
+                        new File(recorder.getSavedFileAbsolutePath()),
+                        new SpeechToTextService.CallbackWithTranscript() {
+                    @Override
+                    public void run(String text) {
+                        Log.i("PhoneCallListenerService", "Text Provided to OOPSpam: " + text);
+                        try {
+                            boolean isTextSpam = spamAPI.isTextSpam(spamAPI.sendOopSpamRequestJson(text));
+                            if (isTextSpam) {
+                                Log.i("PhoneCallListenerService", "Spam: notification being pushed");
+                                NotificationsHelper.pushNotification(
+                                        getApplicationContext(),
+                                        "WARNING!! YOUR CALL MIGHT BE A SCAM",
+                                        "If you gave away any private information, inform the relevant parties immediately.");
+                            } else {
+                                Log.i("PhoneCallListenerService", "Not spam: notification not being pushed");
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
             }
         };
         attachListener();

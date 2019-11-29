@@ -9,20 +9,20 @@ import org.json.JSONObject;
 
 // Source: https://www.mkyong.com/java/okhttp-how-to-send-http-requests/
 public class SpamAPI {
-    private static String _endpoint;
-    private static String _apiKey;
-    private static final OkHttpClient httpClient = new OkHttpClient();
+    private String _endpoint;
+    private String _apiKey;
+    private final OkHttpClient httpClient = new OkHttpClient();
 
     // JSON type to send HTTP POST request using OkHttp3
     // https://stackoverflow.com/a/34180100/6288413
-    public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+    public final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
     public SpamAPI(String apiEnpoint, String apiKey) {
         _endpoint = apiEnpoint;
         _apiKey = apiKey;
     }
 
-    private static Response sendOopSpamRequest(String text) throws Exception {
+    private Response sendOopSpamRequest(String text) throws Exception {
         /*
         RequestBody requestBody = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
@@ -39,7 +39,7 @@ public class SpamAPI {
         JSONObject jsonText = new JSONObject();
         jsonText.put("content", text);
 
-        RequestBody requestBody = RequestBody.create(JSON, jsonText.toString());
+        RequestBody requestBody = RequestBody.create(jsonText.toString(), JSON);
 
         System.out.println(requestBody);
         Response response = null;
@@ -67,7 +67,7 @@ public class SpamAPI {
         return response;
     }
 
-    public static JSONObject sendOopSpamRequestJson(String text) throws Exception {
+    public JSONObject sendOopSpamRequestJson(String text) throws Exception {
         JSONObject jsonResponse = null;
         Response response = null;
         try {
@@ -83,7 +83,7 @@ public class SpamAPI {
         return jsonResponse;
     }
 
-    public static int getTextSpamScore(JSONObject responseBody)
+    public int getTextSpamScore(JSONObject responseBody)
     {
         try {
             return Integer.parseInt(responseBody.get("Score").toString());
@@ -94,14 +94,14 @@ public class SpamAPI {
         }
     }
 
-    public static boolean isTextSpam(JSONObject responseBody)
+    public boolean isTextSpam(JSONObject responseBody)
     {
         try {
             return ((JSONObject) responseBody.get("Details")).get("isContentSpam").equals("spam");
         } catch (NullPointerException e) {
             throw new IllegalArgumentException("responseBody is null");
         } catch (JSONException e) {
-            throw new IllegalArgumentException("ResponseBody does not contain isContentSpam field");
+            throw new IllegalArgumentException("ResponseBody does not contain isContentSpam field. responseBody: " + responseBody.toString());
         }
     }
 }
