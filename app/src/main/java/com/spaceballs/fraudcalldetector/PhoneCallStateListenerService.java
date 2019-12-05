@@ -10,7 +10,7 @@ import android.util.Log;
 import java.io.File;
 
 // TODO make this a singleton somehow (static maybe)
-public class PhoneCallListenerService extends Service {
+public class PhoneCallStateListenerService extends Service {
     TelephonyManager manager;
     CallRecordingService recorder;
     File directory;
@@ -62,23 +62,23 @@ public class PhoneCallListenerService extends Service {
             void stop() {
                 prevState = TelephonyManager.CALL_STATE_IDLE;
                 recorder.stop();
-                Log.i("PhoneCallListenerService", "Stopping");
+                Log.i("PhoneCallStateListenerService", "Stopping");
                 STTService.speechToTextUsingGoogle(
                         new File(recorder.getSavedFileAbsolutePath()),
                         new SpeechToTextService.CallbackWithTranscript() {
                     @Override
                     public void run(String text) {
-                        Log.i("PhoneCallListenerService", "Text Provided to OOPSpam: " + text);
+                        Log.i("PhoneCallStateListenerService", "Text Provided to OOPSpam: " + text);
                         try {
                             boolean isTextSpam = spamAPI.isTextSpam(spamAPI.sendOopSpamRequestJson(text));
                             if (isTextSpam) {
-                                Log.i("PhoneCallListenerService", "Spam: notification being pushed");
+                                Log.i("PhoneCallStateListenerService", "Spam: notification being pushed");
                                 NotificationsHelper.pushNotification(
                                         getApplicationContext(),
                                         "WARNING!! YOUR CALL MIGHT BE A SCAM",
                                         "If you gave away any private information, inform the relevant parties immediately.");
                             } else {
-                                Log.i("PhoneCallListenerService", "Not spam: notification not being pushed");
+                                Log.i("PhoneCallStateListenerService", "Not spam: notification not being pushed");
                             }
                         } catch (Exception e) {
                             e.printStackTrace();

@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity implements IDisclaimerDialog
 
     private void setupAndStartListener() {
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO}, 10);
-        Intent startServiceIntent = new Intent(getApplicationContext(), PhoneCallListenerService.class);
+        Intent startServiceIntent = new Intent(getApplicationContext(), PhoneCallStateListenerService.class);
         startService(startServiceIntent);
         Toast.makeText(getApplicationContext(), R.string.service_started_success, Toast.LENGTH_SHORT);
     }
